@@ -2,6 +2,7 @@ package com.demo.demo.common.kafka.consts;
 
 /**
  * 统一维护kafka的主题
+ * 测试git merge
  */
 public enum KafkaTopicEnum {
     TEST("test"),
