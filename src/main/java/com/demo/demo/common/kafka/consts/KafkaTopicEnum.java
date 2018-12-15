@@ -1,7 +1,7 @@
 package com.demo.demo.common.kafka.consts;
 
 /**
- * kafka 所有的topic都放到这里维护，避免不小心重复
+ * 统一维护kafka的主题
  */
 public enum KafkaTopicEnum {
     TEST("test"),
