@@ -2,6 +2,7 @@ package com.demo.demo.common.kafka;
 
 import com.demo.demo.common.SpringContextHolder;
 import com.demo.demo.common.kafka.consts.EventTypeEnum;
+import com.demo.demo.common.kafka.consts.KafkaTopicEnum;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 /**
@@ -18,7 +19,7 @@ public interface EventModel<T> {
     /**
      * 需要监听的topic
      */
-    String getTopic();
+    KafkaTopicEnum getTopic();
 
     /**
      * 消息模式：单播、广播
@@ -32,7 +33,7 @@ public interface EventModel<T> {
      */
     default void sendAsync(T t){
         EventManager manager = SpringContextHolder.getBean(EventManager.class);
-        String topic = this.getTopic();
+        String topic = this.getTopic().topic();
         manager.sendAsync(topic, t, getEventType());
     }
 
@@ -41,7 +42,7 @@ public interface EventModel<T> {
      */
     default boolean sendSync(T t){
         EventManager manager = SpringContextHolder.getBean(EventManager.class);
-        String topic = this.getTopic();
+        String topic = this.getTopic().topic();
         return manager.sendSync(topic, t, getEventType());
     }
 

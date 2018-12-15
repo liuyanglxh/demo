@@ -162,7 +162,7 @@ public class EventManagerImpl implements EventManager, ApplicationRunner {
             //创建线程池，管理所有的消费者
             if (0 != standalones.size()) {
                 for (EventModel standAlone : standalones) {
-                    String topic = this.getTopic(standAlone.getTopic(), EventTypeEnum.EXCLUSIVE);
+                    String topic = this.getTopic(standAlone.getTopic().topic(), EventTypeEnum.EXCLUSIVE);
                     exclusiveModelMap.computeIfAbsent(topic, v -> new ArrayList<>());
                     exclusiveModelMap.get(topic).add(standAlone);
                 }
@@ -171,7 +171,7 @@ public class EventManagerImpl implements EventManager, ApplicationRunner {
 
             if (broadcasts.size() != 0) {
                 for (EventModel standAlone : broadcasts) {
-                    String topic = this.getTopic(standAlone.getTopic(), EventTypeEnum.STAND_ALONE);
+                    String topic = this.getTopic(standAlone.getTopic().topic(), EventTypeEnum.STAND_ALONE);
                     standaloneModelMap.computeIfAbsent(topic, v -> new ArrayList<>());
                     standaloneModelMap.get(topic).add(standAlone);
                 }

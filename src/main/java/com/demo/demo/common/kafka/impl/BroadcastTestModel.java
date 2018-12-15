@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class BroadcastTestModel implements EventModel<String> {
 
-    private final String TOPIC = KafkaTopicEnum.TEST.topic();
 
     @Override
     public void handle(String str, ConsumerRecord<String, String> record) {
@@ -23,8 +22,8 @@ public class BroadcastTestModel implements EventModel<String> {
     }
 
     @Override
-    public String getTopic() {
-        return TOPIC;
+    public KafkaTopicEnum getTopic() {
+        return KafkaTopicEnum.TEST;
     }
 
     @Override

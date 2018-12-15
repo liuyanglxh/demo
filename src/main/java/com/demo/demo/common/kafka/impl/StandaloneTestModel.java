@@ -14,8 +14,6 @@ import java.util.Map;
 @Component
 public class StandaloneTestModel implements EventModel<Map<String, Integer>> {
 
-    private final String TOPIC = KafkaTopicEnum.TEST.topic();
-
     @Override
     public void handle(Map<String, Integer> map, ConsumerRecord<String, String> record) {
         System.out.println();
@@ -24,8 +22,8 @@ public class StandaloneTestModel implements EventModel<Map<String, Integer>> {
     }
 
     @Override
-    public String getTopic() {
-        return TOPIC;
+    public KafkaTopicEnum getTopic() {
+        return KafkaTopicEnum.TEST;
     }
 
     @Override

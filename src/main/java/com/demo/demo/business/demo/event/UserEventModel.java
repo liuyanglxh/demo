@@ -10,16 +10,14 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
  */
 public class UserEventModel implements EventModel<UserEntity> {
 
-    private final String TOPIC = KafkaTopicEnum.USER_CHANGE.topic();
-
     @Override
     public void handle(UserEntity userEntity, ConsumerRecord<String, String> record) {
         System.out.println("user : " + userEntity.getId() + " has been changed");
     }
 
     @Override
-    public String getTopic() {
-        return TOPIC;
+    public KafkaTopicEnum getTopic() {
+        return KafkaTopicEnum.USER_CHANGE;
     }
 
 }
