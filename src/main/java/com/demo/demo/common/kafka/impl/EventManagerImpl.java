@@ -99,7 +99,7 @@ public class EventManagerImpl implements EventManager, ApplicationRunner {
         } catch (JsonProcessingException e) {
             logger.error("fail writeValueAsString ", e);
             return false;
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Exception e) {
             logger.error("false sendAsync message ", e);
             return false;
         }
