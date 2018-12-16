@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
         if (e instanceof BusinessException) {
             return Result.fail(e.getMessage());
         }
-        return Result.fail();
+        return Result.fail("服务器在开小差，请稍后再试！");
     }
 
 
