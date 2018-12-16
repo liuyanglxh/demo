@@ -5,6 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 全局异常处理类
  */
@@ -31,7 +34,10 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
-    public Result exceptionHandler(Exception e) {
+    public Result exceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response) {
+        response.setStatus(200);
+
+        //业务异常直接返回异常信息
         if (e instanceof BusinessException) {
             return Result.fail(e.getMessage());
         }
