@@ -4,10 +4,12 @@ import com.demo.demo.business.demo.pojo.entity.UserEntity;
 import com.demo.demo.common.kafka.EventModel;
 import com.demo.demo.common.kafka.consts.KafkaTopicEnum;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by liuyang on 2018/11/14
  */
+@Component
 public class UserEventModel implements EventModel<UserEntity> {
 
     @Override
