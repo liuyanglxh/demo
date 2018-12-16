@@ -1,13 +1,12 @@
 package com.demo.demo.business.demo.controller.admin;
 
+import com.demo.demo.common.advice.BusinessException;
 import com.demo.demo.common.kafka.impl.BroadcastTestModel;
 import com.demo.demo.common.web.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.Map;
 
 /**
@@ -26,4 +25,18 @@ public class AdminDemoController {
         broadcastmodel.sendAsync(message);
         return Result.success("成功发送消息 : " + message);
     }
+
+    /**
+     * 测试GlobalException
+     */
+    @GetMapping("advice/test")
+    public Result testAdvice(@ModelAttribute("goal") String goal,
+                             @RequestParam(value = "doThrow", defaultValue = "false") Boolean doThrow) {
+        if (doThrow) {
+            throw new BusinessException(goal);
+        }
+        return Result.success(String.format("the message is : %s", goal));
+    }
+
+
 }
