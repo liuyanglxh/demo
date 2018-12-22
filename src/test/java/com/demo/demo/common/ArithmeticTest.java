@@ -2,10 +2,7 @@ package com.demo.demo.common;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.IntSummaryStatistics;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -112,7 +109,11 @@ public class ArithmeticTest {
 
     @Test
     public void test6(){
+        Map<Integer, String> map = new HashMap<>();
+        Map<Integer, Integer> map2 = new HashMap<>();
 
+        String s = Optional.ofNullable(map2).map(m -> m.get(1)).map(i -> map.get(i)).orElse(null);
+        System.out.println(s == null);
     }
 
 

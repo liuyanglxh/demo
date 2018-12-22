@@ -1,5 +1,6 @@
 package com.demo.demo.common;
 
+import com.demo.demo.common.utils.common.CommonUtils;
 import com.demo.demo.java8.TestBean;
 import org.junit.Test;
 import org.springframework.util.CollectionUtils;
@@ -16,6 +17,13 @@ import java.util.stream.Stream;
  * Created by liuyang on 2018/11/15
  */
 public class TestWithoutSpring {
+
+    @Test
+    public void test13(){
+        List<String> list = Arrays.asList("1", "as", "3as", "asda");
+        Map<Integer, String> map = CommonUtils.trans2Map(list, str -> str.length());
+        System.out.println(map);
+    }
 
     @Test
     public void test1() {
