@@ -18,11 +18,11 @@ public class CommonUtils {
      */
     public static boolean allEmpty(Collection<String> strs) {
         for (String str : strs) {
-            if (StringUtils.isEmpty(str)) {
-                return true;
+            if (!StringUtils.isEmpty(str)) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     /**
