@@ -22,13 +22,13 @@ public class TestWithoutSpring {
     @Test
     public void test14(){
         List<String> list = Arrays.asList("1", "as", "3as", "asda");
-        CollectionUtil.forEach(list, System.out::println);
+        CollectionUtil.forEach(list, str -> System.out.println(str.length()));
     }
 
     @Test
     public void test13(){
         List<String> list = Arrays.asList("1", "as", "3as", "asda");
-        Map<Integer, String> map = CollectionUtil.trans2Map(list, str -> str.length());
+        Map<Integer, String> map = CollectionUtil.trans2Map(list, String::length);
         System.out.println(map);
     }
 
