@@ -2,7 +2,6 @@ package com.demo.demo.common.utils.common;
 
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
