@@ -25,18 +25,6 @@ public class CommonUtils {
         return true;
     }
 
-    /**
-     * 把一个集合的元素转换成map
-     *
-     * @param function 需要的key
-     */
-    public static <T, R> Map<T, R> trans2Map(Collection<? extends R> targets, Function<R, T> function) {
-        Map<T, R> result = new HashMap<>();
-        if (CollectionUtils.isEmpty(targets)) {
-            return result;
-        }
-        targets.forEach(t -> result.put(function.apply(t), t));
-        return result;
-    }
+
 
 }
