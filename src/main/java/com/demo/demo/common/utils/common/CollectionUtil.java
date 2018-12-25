@@ -1,6 +1,7 @@
 package com.demo.demo.common.utils.common;
 
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,7 +31,8 @@ public class CollectionUtil {
      * foreach循环，不用判断非空
      */
     public static<T> void forEach(Collection<? extends T> objs, Consumer<? super T> consumer){
-        if (objs != null){
+        Objects.requireNonNull(consumer);
+        if (!StringUtils.isEmpty(objs)) {
             objs.forEach(consumer);
         }
     }
