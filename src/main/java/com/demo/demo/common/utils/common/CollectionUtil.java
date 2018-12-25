@@ -5,6 +5,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -16,6 +17,7 @@ public class CollectionUtil {
      * @param function 需要的key
      */
     public static <T, R> Map<T, R> trans2Map(Collection<? extends R> targets, Function<R, T> function) {
+        Objects.requireNonNull(function);
         Map<T, R> result = new HashMap<>();
         if (CollectionUtils.isEmpty(targets)) {
             return result;
