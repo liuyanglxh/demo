@@ -20,13 +20,20 @@ import java.util.stream.Stream;
 public class TestWithoutSpring {
 
     @Test
-    public void test14(){
+    public void test15() {
+        Map<String, String> map = new HashMap<>();
+        map.put("name", "jack");
+        CollectionUtil.forEach(map, (k, v) -> System.out.println(String.format("key -- %s; value -- %s", k, v)));
+    }
+
+    @Test
+    public void test14() {
         List<String> list = Arrays.asList("1", "as", "3as", "asda");
         CollectionUtil.forEach(list, str -> System.out.println(str.length()));
     }
 
     @Test
-    public void test13(){
+    public void test13() {
         List<String> list = Arrays.asList("1", "as", "3as", "asda");
         Map<Integer, String> map = CollectionUtil.trans2Map(list, String::length);
         System.out.println(map);
@@ -229,7 +236,7 @@ public class TestWithoutSpring {
     }
 
     @Test
-    public void test10(){
+    public void test10() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8);
         Map<Integer, List<Integer>> nums = list.stream().collect(Collectors.groupingBy(i -> i));
         nums.forEach((i, lst) -> System.out.println(i + ":" + lst));
@@ -239,22 +246,21 @@ public class TestWithoutSpring {
      * 测试groupingBy
      */
     @Test
-    public void test11(){
+    public void test11() {
         List<User> users = Arrays.asList(new User(1), new User(2), new User(3), new User(7), new User(6));
         Map<Integer, List<User>> map = users.stream().collect(Collectors.groupingBy(User::getAge));
-        map.forEach((k, v) -> System.out.println(k +":"+ v));
+        map.forEach((k, v) -> System.out.println(k + ":" + v));
     }
+
     /**
      * 测试joining
      */
     @Test
-    public void test12(){
+    public void test12() {
         List<User> users = Arrays.asList(new User(1), new User(2), new User(3), new User(7), new User(6));
         String str = users.stream().map(user -> user.getAge().toString()).collect(Collectors.joining(":", "{", "}"));
         System.out.println(str);
     }
-
-
 
 
 }

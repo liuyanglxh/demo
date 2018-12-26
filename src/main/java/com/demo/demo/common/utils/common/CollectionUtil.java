@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -27,13 +28,17 @@ public class CollectionUtil {
         return result;
     }
 
-    /**
-     * foreach循环，不用判断非空
-     */
     public static<T> void forEach(Collection<? extends T> objs, Consumer<? super T> consumer){
         Objects.requireNonNull(consumer);
         if (!StringUtils.isEmpty(objs)) {
             objs.forEach(consumer);
+        }
+    }
+
+    public static <K, V> void forEach(Map<K, V> map, BiConsumer<? super K, ? super V> action) {
+        Objects.requireNonNull(action);
+        if (map != null && map.size() > 0) {
+            map.forEach(action);
         }
     }
 }
