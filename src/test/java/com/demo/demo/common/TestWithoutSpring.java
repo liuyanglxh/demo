@@ -1,7 +1,11 @@
 package com.demo.demo.common;
 
+import cn.hutool.core.map.MapProxy;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.log.Log;
+import cn.hutool.log.dialect.slf4j.Slf4jLog;
+import cn.hutool.log.dialect.slf4j.Slf4jLogFactory;
 import com.demo.demo.common.utils.common.CollectionUtil;
-import com.demo.demo.common.utils.common.CommonUtils;
 import com.demo.demo.java8.TestBean;
 import org.junit.Test;
 import org.springframework.util.CollectionUtils;
@@ -18,6 +22,53 @@ import java.util.stream.Stream;
  * Created by liuyang on 2018/11/15
  */
 public class TestWithoutSpring {
+
+    @Test
+    public void test20(){
+    }
+
+    @Test
+    public void test19(){
+        Map<String, String> map = MapUtil.builder("name", "ly").build();
+        MapProxy proxy = MapProxy.create(map);
+        String name = proxy.getStr("name");
+        System.out.println(name);
+    }
+
+    @Test
+    public void test18(){
+        //测试MapUtil的getXxx方法
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> data = MapUtil.builder(map).put("name", "ly").put("age", "27").put("sex", true).build();
+        System.out.println(MapUtil.getStr(data, "name"));
+        System.out.println(MapUtil.getInt(data, "age"));
+        System.out.println(MapUtil.getBool(data, "sex"));
+        User user = new User();
+        user.setAge(10);
+        Map<String, User> userMap = MapUtil.builder("user", user).build();
+        User usr = MapUtil.get(userMap, "user", User.class);
+        System.out.println(usr.getAge());
+    }
+
+    @Test
+    public void test17(){
+        //测试MapUtil的getAny方法
+        Map<String, String> map = MapUtil.builder("name", "ly").put("city", "cd").build();
+        Map<String, String> newMap = MapUtil.getAny(map, "name");
+        System.out.println(newMap);
+    }
+
+    @Test
+    public void test16(){
+        Map<String, String> map = MapUtil.builder("name", "jack")
+                .put("hobby", "girl").build();
+        System.out.println(map);
+        System.out.println(map.getClass());
+        Map<String, String> mp = new ConcurrentHashMap<>();
+        Map<String, String> build = MapUtil.builder(mp).put("name", "ly").build();
+        System.out.println(build);
+        System.out.println(build.getClass());
+    }
 
     @Test
     public void test15() {
