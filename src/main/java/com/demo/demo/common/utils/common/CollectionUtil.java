@@ -30,7 +30,7 @@ public class CollectionUtil {
 
     public static<T> void forEach(Collection<? extends T> objs, Consumer<? super T> consumer){
         Objects.requireNonNull(consumer);
-        if (!StringUtils.isEmpty(objs)) {
+        if (!CollectionUtils.isEmpty(objs)) {
             objs.forEach(consumer);
         }
     }
