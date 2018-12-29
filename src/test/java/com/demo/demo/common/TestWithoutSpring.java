@@ -2,6 +2,10 @@ package com.demo.demo.common;
 
 import cn.hutool.core.map.MapProxy;
 import cn.hutool.core.map.MapUtil;
+import com.demo.demo.business.demo.pojo.entity.UserEntity;
+import com.demo.demo.business.demo.special.ISimpleAop;
+import com.demo.demo.business.demo.special.reward.RewardExecutor;
+import com.demo.demo.business.demo.special.reward.RewarderEnum;
 import com.demo.demo.common.utils.common.CollectionUtil;
 import com.demo.demo.java8.TestBean;
 import com.demo.demo.jdk.JDKProxyDemo;
@@ -24,6 +28,31 @@ import java.util.stream.Stream;
  */
 public class TestWithoutSpring {
 
+    @Test
+    public void test24() {
+        ISimpleAop a1 = () -> System.out.println("111");
+        ISimpleAop a2 = () -> System.out.println("222");
+        ISimpleAop a3 = () -> System.out.println("333");
+        ISimpleAop a4 = () -> System.out.println("444");
+        ISimpleAop a5 = () -> System.out.println("555");
+
+        jobs(a4, a4, a3, a1, a2, a5, a5, a1, a2);
+    }
+
+    private void jobs(ISimpleAop... jobs) {
+        if (jobs != null) {
+            for (ISimpleAop job : jobs) {
+                job.doJob();
+            }
+        }
+    }
+
+    @Test
+    public void test23() {
+        UserEntity user = new UserEntity();
+        user.setId(1);
+        new RewardExecutor(user).add(RewarderEnum.HIGH).add(RewarderEnum.LOW).add(RewarderEnum.HIGH).execute();
+    }
 
     @Test
     public void test22() {
@@ -37,7 +66,7 @@ public class TestWithoutSpring {
     }
 
     @FunctionalInterface
-    private static interface IJob{
+    private static interface IJob {
         void doJob(IJob job);
     }
 
@@ -45,7 +74,7 @@ public class TestWithoutSpring {
     public void test21() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(10);
         //启动10个线程
-        for (int i = 0 ;i <10;i++){
+        for (int i = 0; i < 10; i++) {
             final Integer s = i;
             new Thread(() -> {
                 try {
@@ -70,16 +99,16 @@ public class TestWithoutSpring {
     }
 
     @Test
-    public void test20(){
+    public void test20() {
         //测试jdk动态代理对象
         ProxyDemoImpl target = new ProxyDemoImpl();
         JDKProxyDemo proxy = new JDKProxyDemo();
-        ProxyDemo p = (ProxyDemo)proxy.getProxy(target);
+        ProxyDemo p = (ProxyDemo) proxy.getProxy(target);
         p.doSomething();
     }
 
     @Test
-    public void test19(){
+    public void test19() {
         Map<String, String> map = MapUtil.builder("name", "ly").build();
         MapProxy proxy = MapProxy.create(map);
         String name = proxy.getStr("name");
@@ -87,7 +116,7 @@ public class TestWithoutSpring {
     }
 
     @Test
-    public void test18(){
+    public void test18() {
         //测试MapUtil的getXxx方法
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> data = MapUtil.builder(map).put("name", "ly").put("age", "27").put("sex", true).build();
@@ -102,7 +131,7 @@ public class TestWithoutSpring {
     }
 
     @Test
-    public void test17(){
+    public void test17() {
         //测试MapUtil的getAny方法
         Map<String, String> map = MapUtil.builder("name", "ly").put("city", "cd").build();
         Map<String, String> newMap = MapUtil.getAny(map, "name");
@@ -110,7 +139,7 @@ public class TestWithoutSpring {
     }
 
     @Test
-    public void test16(){
+    public void test16() {
         Map<String, String> map = MapUtil.builder("name", "jack")
                 .put("hobby", "girl").build();
         System.out.println(map);
