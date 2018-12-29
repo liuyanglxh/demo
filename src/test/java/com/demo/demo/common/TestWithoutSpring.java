@@ -2,16 +2,17 @@ package com.demo.demo.common;
 
 import cn.hutool.core.map.MapProxy;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.log.Log;
-import cn.hutool.log.dialect.slf4j.Slf4jLog;
-import cn.hutool.log.dialect.slf4j.Slf4jLogFactory;
 import com.demo.demo.common.utils.common.CollectionUtil;
 import com.demo.demo.java8.TestBean;
+import com.demo.demo.jdk.JDKProxyDemo;
+import com.demo.demo.jdk.ProxyDemo;
+import com.demo.demo.jdk.ProxyDemoImpl;
 import org.junit.Test;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
@@ -23,8 +24,58 @@ import java.util.stream.Stream;
  */
 public class TestWithoutSpring {
 
+
+    @Test
+    public void test22() {
+        IJob job1 = job -> System.out.println("i am the job");
+        IJob job2 = job -> {
+            System.out.println("before ...");
+            job.doJob(job);
+            System.out.println("after ...");
+        };
+        job2.doJob(job1);
+    }
+
+    @FunctionalInterface
+    private static interface IJob{
+        void doJob(IJob job);
+    }
+
+    @Test
+    public void test21() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(10);
+        //启动10个线程
+        for (int i = 0 ;i <10;i++){
+            final Integer s = i;
+            new Thread(() -> {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException ignored) {
+                }
+                System.out.println(String.format("第%d个线程", s));
+                latch.countDown();
+            }).start();
+        }
+
+        new Thread(() -> {
+            try {
+                latch.await();
+            } catch (InterruptedException ignored) {
+            }
+            System.out.println("异步也完成了");
+        }).start();
+
+        latch.await();
+        System.out.println("所有线程都完成了");
+    }
+
     @Test
     public void test20(){
+        //测试jdk动态代理对象
+        ProxyDemoImpl target = new ProxyDemoImpl();
+        JDKProxyDemo proxy = new JDKProxyDemo();
+        ProxyDemo p = (ProxyDemo)proxy.getProxy(target);
+        p.doSomething();
     }
 
     @Test
