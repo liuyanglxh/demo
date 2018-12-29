@@ -163,7 +163,7 @@ public class TestWithoutSpring {
     @Test
     public void test13() {
         List<String> list = Arrays.asList("1", "as", "3as", "asda");
-        Map<Integer, String> map = CollectionUtil.trans2Map(list, String::length);
+        Map<Integer, String> map = CollectionUtil.getMap(list, String::length);
         System.out.println(map);
     }
 

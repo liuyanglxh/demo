@@ -18,7 +18,7 @@ public class CollectionUtil {
      *
      * @param function 需要的key
      */
-    public static <T, R> Map<T, R> trans2Map(Collection<? extends R> targets, Function<R, T> function) {
+    public static <T, R> Map<T, R> getMap(Collection<? extends R> targets, Function<R, T> function) {
         Objects.requireNonNull(function);
         Map<T, R> result = new HashMap<>();
         if (CollectionUtils.isEmpty(targets)) {
