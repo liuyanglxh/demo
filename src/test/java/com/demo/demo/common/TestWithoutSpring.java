@@ -23,9 +23,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Created by liuyang on 2018/11/15
- */
 public class TestWithoutSpring {
 
     @Test
