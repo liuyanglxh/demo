@@ -1,6 +1,8 @@
 package com.demo.demo.common.advice;
 
 import com.demo.demo.common.web.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
      * 应用到所有@RequestMapping注解方法，在其执行之前初始化数据绑定器
@@ -35,12 +39,16 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(value = Exception.class)
     public Result exceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response) {
+
+        logger.error(request.getRequestURI(), e);
+
         response.setStatus(200);
 
         //业务异常直接返回异常信息
         if (e instanceof BusinessException) {
             return Result.fail(e.getMessage());
         }
+
         return Result.fail("服务器在开小差，请稍后再试！");
     }
 

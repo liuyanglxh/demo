@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <classPathEntry location="/Users/liuyang/.m2/repository/mysql/mysql-connector-java/5.1.39/mysql-connector-java-5.1.39.jar"/>
+    <context id="mall" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <!--  是否取消注释  -->
+            <property name="suppressDate" value="true"/>
+            <!--  是否生成注释代时间戳 -->
+        </commentGenerator>
+        <!--  生成的pojo，将implements Serializable -->
+        <!--<plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>-->
+        <!--  数据库链接URL、用户名、密码  -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3306/demo" userId="root" password="123456"/>
+        <!--
+              默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer;true 把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal
+        -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <javaModelGenerator targetPackage="com.demo.demo.business.demo.pojo.entity" targetProject="/Users/liuyang/Documents/personal/demo/src/main/java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+        <!-- 对应的mapper.xml文件   -->
+        <sqlMapGenerator targetPackage="com.demo.demo.business.demo.dao.mapper" targetProject="/Users/liuyang/Documents/personal/demo/src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <!--  对应的Mapper接口类文件  -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.demo.demo.business.demo.dao.mapper" targetProject="/Users/liuyang/Documents/personal/demo/src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <!--<table schema="mall" tableName="mall_cart_goods" domainObjectName="CartGoodsEntity" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false">-->
+        <!--&lt;!&ndash;-->
+        <!--如果设置为true，生成的model类会直接使用column本身的名字，而不会再使用驼峰命名方法，比如BORN_DATE，生成的属性名字就是BORN_DATE,而不会是bornDate-->
+        <!--&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="useActualColumnNames" value="false"/>&ndash;&gt;-->
+        <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+        <table schema="demo" tableName="member" domainObjectName="MemberEntity" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false">
+            <!--
+             如果设置为true，生成的model类会直接使用column本身的名字，而不会再使用驼峰命名方法，比如BORN_DATE，生成的属性名字就是BORN_DATE,而不会是bornDate
+            -->
+            <!--<property name="useActualColumnNames" value="false"/>-->
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>

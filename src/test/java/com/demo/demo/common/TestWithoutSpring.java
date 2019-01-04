@@ -1,21 +1,189 @@
 package com.demo.demo.common;
 
+import cn.hutool.core.map.MapProxy;
+import cn.hutool.core.map.MapUtil;
+import com.demo.demo.business.demo.pojo.entity.UserEntity;
+import com.demo.demo.business.demo.pojo.visitor.BaseProduct;
+import com.demo.demo.business.demo.pojo.visitor.visitors.Candy;
+import com.demo.demo.business.demo.pojo.visitor.visitors.Fruit;
+import com.demo.demo.business.demo.pojo.visitor.visitors.Milk;
+import com.demo.demo.business.demo.special.ISimpleAop;
+import com.demo.demo.business.demo.special.reward.RewardExecutor;
+import com.demo.demo.business.demo.special.reward.RewarderEnum;
+import com.demo.demo.business.demo.visitor.product.ProductAcceptable;
+import com.demo.demo.business.demo.visitor.product.ProductVisitor;
+import com.demo.demo.business.demo.visitor.product.impl.ProductVisitorImpl;
+import com.demo.demo.common.utils.common.CollectionUtil;
 import com.demo.demo.java8.TestBean;
+import com.demo.demo.jdk.JDKProxyDemo;
+import com.demo.demo.jdk.ProxyDemo;
+import com.demo.demo.jdk.ProxyDemoImpl;
 import org.junit.Test;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Created by liuyang on 2018/11/15
- */
 public class TestWithoutSpring {
+
+    @Test
+    public void test25(){
+        List<ProductAcceptable> products = new ArrayList<>();
+        products.add(new Milk("牛奶", 10));
+        products.add(new Fruit("水果", 10));
+        products.add(new Candy("糖", 10));
+        ProductVisitor visitor = new ProductVisitorImpl();
+        products.forEach(a -> a.accept(visitor));
+    }
+
+
+    @Test
+    public void test24() {
+        ISimpleAop a1 = () -> System.out.println("111");
+        ISimpleAop a2 = () -> System.out.println("222");
+        ISimpleAop a3 = () -> System.out.println("333");
+        ISimpleAop a4 = () -> System.out.println("444");
+        ISimpleAop a5 = () -> System.out.println("555");
+
+        jobs(a4, a4, a3, a1, a2, a5, a5, a1, a2);
+    }
+
+    private void jobs(ISimpleAop... jobs) {
+        if (jobs != null) {
+            for (ISimpleAop job : jobs) {
+                job.doJob();
+            }
+        }
+    }
+
+    @Test
+    public void test23() {
+        UserEntity user = new UserEntity();
+        user.setId(1);
+        new RewardExecutor(user).add(RewarderEnum.HIGH).add(RewarderEnum.LOW).add(RewarderEnum.HIGH).execute();
+    }
+
+    @Test
+    public void test22() {
+        IJob job1 = job -> System.out.println("i am the job");
+        IJob job2 = job -> {
+            System.out.println("before ...");
+            job.doJob(job);
+            System.out.println("after ...");
+        };
+        job2.doJob(job1);
+    }
+
+    @FunctionalInterface
+    private static interface IJob {
+        void doJob(IJob job);
+    }
+
+    @Test
+    public void test21() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(10);
+        //启动10个线程
+        for (int i = 0; i < 10; i++) {
+            final Integer s = i;
+            new Thread(() -> {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException ignored) {
+                }
+                System.out.println(String.format("第%d个线程", s));
+                latch.countDown();
+            }).start();
+        }
+
+        new Thread(() -> {
+            try {
+                latch.await();
+            } catch (InterruptedException ignored) {
+            }
+            System.out.println("异步也完成了");
+        }).start();
+
+        latch.await();
+        System.out.println("所有线程都完成了");
+    }
+
+    @Test
+    public void test20() {
+        //测试jdk动态代理对象
+        ProxyDemoImpl target = new ProxyDemoImpl();
+        JDKProxyDemo proxy = new JDKProxyDemo();
+        ProxyDemo p = (ProxyDemo) proxy.getProxy(target);
+        p.doSomething();
+    }
+
+    @Test
+    public void test19() {
+        Map<String, String> map = MapUtil.builder("name", "ly").build();
+        MapProxy proxy = MapProxy.create(map);
+        String name = proxy.getStr("name");
+        System.out.println(name);
+    }
+
+    @Test
+    public void test18() {
+        //测试MapUtil的getXxx方法
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> data = MapUtil.builder(map).put("name", "ly").put("age", "27").put("sex", true).build();
+        System.out.println(MapUtil.getStr(data, "name"));
+        System.out.println(MapUtil.getInt(data, "age"));
+        System.out.println(MapUtil.getBool(data, "sex"));
+        User user = new User();
+        user.setAge(10);
+        Map<String, User> userMap = MapUtil.builder("user", user).build();
+        User usr = MapUtil.get(userMap, "user", User.class);
+        System.out.println(usr.getAge());
+    }
+
+    @Test
+    public void test17() {
+        //测试MapUtil的getAny方法
+        Map<String, String> map = MapUtil.builder("name", "ly").put("city", "cd").build();
+        Map<String, String> newMap = MapUtil.getAny(map, "name");
+        System.out.println(newMap);
+    }
+
+    @Test
+    public void test16() {
+        Map<String, String> map = MapUtil.builder("name", "jack")
+                .put("hobby", "girl").build();
+        System.out.println(map);
+        System.out.println(map.getClass());
+        Map<String, String> mp = new ConcurrentHashMap<>();
+        Map<String, String> build = MapUtil.builder(mp).put("name", "ly").build();
+        System.out.println(build);
+        System.out.println(build.getClass());
+    }
+
+    @Test
+    public void test15() {
+        Map<String, String> map = new HashMap<>();
+        map.put("name", "jack");
+        CollectionUtil.forEach(map, (k, v) -> System.out.println(String.format("key -- %s; value -- %s", k, v)));
+    }
+
+    @Test
+    public void test14() {
+        List<String> list = Arrays.asList("1", "as", "3as", "asda");
+        CollectionUtil.forEach(list, str -> System.out.println(str.length()));
+    }
+
+    @Test
+    public void test13() {
+        List<String> list = Arrays.asList("1", "as", "3as", "asda");
+        Map<Integer, String> map = CollectionUtil.getMap(list, String::length);
+        System.out.println(map);
+    }
 
     @Test
     public void test1() {
@@ -214,7 +382,7 @@ public class TestWithoutSpring {
     }
 
     @Test
-    public void test10(){
+    public void test10() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8);
         Map<Integer, List<Integer>> nums = list.stream().collect(Collectors.groupingBy(i -> i));
         nums.forEach((i, lst) -> System.out.println(i + ":" + lst));
@@ -224,22 +392,21 @@ public class TestWithoutSpring {
      * 测试groupingBy
      */
     @Test
-    public void test11(){
+    public void test11() {
         List<User> users = Arrays.asList(new User(1), new User(2), new User(3), new User(7), new User(6));
         Map<Integer, List<User>> map = users.stream().collect(Collectors.groupingBy(User::getAge));
-        map.forEach((k, v) -> System.out.println(k +":"+ v));
+        map.forEach((k, v) -> System.out.println(k + ":" + v));
     }
+
     /**
      * 测试joining
      */
     @Test
-    public void test12(){
+    public void test12() {
         List<User> users = Arrays.asList(new User(1), new User(2), new User(3), new User(7), new User(6));
         String str = users.stream().map(user -> user.getAge().toString()).collect(Collectors.joining(":", "{", "}"));
         System.out.println(str);
     }
-
-
 
 
 }
