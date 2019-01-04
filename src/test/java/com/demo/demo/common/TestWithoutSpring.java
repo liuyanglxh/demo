@@ -3,9 +3,16 @@ package com.demo.demo.common;
 import cn.hutool.core.map.MapProxy;
 import cn.hutool.core.map.MapUtil;
 import com.demo.demo.business.demo.pojo.entity.UserEntity;
+import com.demo.demo.business.demo.pojo.visitor.BaseProduct;
+import com.demo.demo.business.demo.pojo.visitor.visitors.Candy;
+import com.demo.demo.business.demo.pojo.visitor.visitors.Fruit;
+import com.demo.demo.business.demo.pojo.visitor.visitors.Milk;
 import com.demo.demo.business.demo.special.ISimpleAop;
 import com.demo.demo.business.demo.special.reward.RewardExecutor;
 import com.demo.demo.business.demo.special.reward.RewarderEnum;
+import com.demo.demo.business.demo.visitor.product.ProductAcceptable;
+import com.demo.demo.business.demo.visitor.product.ProductVisitor;
+import com.demo.demo.business.demo.visitor.product.impl.ProductVisitorImpl;
 import com.demo.demo.common.utils.common.CollectionUtil;
 import com.demo.demo.java8.TestBean;
 import com.demo.demo.jdk.JDKProxyDemo;
@@ -24,6 +31,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TestWithoutSpring {
+
+    @Test
+    public void test25(){
+        List<ProductAcceptable> products = new ArrayList<>();
+        products.add(new Milk("牛奶", 10));
+        products.add(new Fruit("水果", 10));
+        products.add(new Candy("糖", 10));
+        ProductVisitor visitor = new ProductVisitorImpl();
+        products.forEach(a -> a.accept(visitor));
+    }
+
 
     @Test
     public void test24() {
