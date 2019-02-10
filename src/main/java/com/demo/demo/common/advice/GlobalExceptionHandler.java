@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public Result exceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response) {
 
-        logger.error(request.getRequestURI(), e);
+        logger.error("error calling {} ", request.getRequestURI(), e);
 
         response.setStatus(200);
 
