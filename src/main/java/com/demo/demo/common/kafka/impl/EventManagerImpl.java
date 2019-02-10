@@ -32,7 +32,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class EventManagerImpl implements EventManager, ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(EventManagerImpl.class);

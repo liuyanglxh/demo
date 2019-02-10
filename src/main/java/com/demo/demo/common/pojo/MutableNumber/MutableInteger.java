@@ -5,11 +5,31 @@ import java.util.Objects;
 /**
  * 可变的int类型
  */
-public class MutableInteger {
+public class MutableInteger extends Number implements Comparable<Integer>{
 
     private int value;
 
     public MutableInteger(){}
+
+    @Override
+    public int intValue() {
+        return value;
+    }
+
+    @Override
+    public long longValue() {
+        return value;
+    }
+
+    @Override
+    public float floatValue() {
+        return value;
+    }
+
+    @Override
+    public double doubleValue() {
+        return value;
+    }
 
     public MutableInteger(int value) {
         this.value = value;
@@ -61,5 +81,10 @@ public class MutableInteger {
     @Override
     public String toString() {
         return String.valueOf(value);
+    }
+
+    @Override
+    public int compareTo(Integer o) {
+        return value - o;
     }
 }
