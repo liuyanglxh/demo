@@ -10,6 +10,13 @@ public class UserEntity {
     private byte sex;           // 0--女  1--男  2--未知
     private Integer score;
 
+    public UserEntity() {
+    }
+
+    public UserEntity(String username) {
+        this.username = username;
+    }
+
     public Integer getId() {
         return id;
     }
