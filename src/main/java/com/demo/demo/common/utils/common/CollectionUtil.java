@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class CollectionUtil {
 
@@ -55,10 +54,19 @@ public class CollectionUtil {
             return Collections.emptyList();
         }
 
-        Map<R, List<T>> map = targets.stream().collect(Collectors.groupingBy(parentIdFunc));
+        Map<R, List<T>> map  = new HashMap<>();
+        targets.forEach(target -> {
+            R p = parentIdFunc.apply(target);
+            map.putIfAbsent(p, new ArrayList<>());
+            map.get(p).add(target);
+        });
+
         List<T> result = map.get(topParent);
-        buildTree(result, map, idFunc, setSubFunc);
-        return result;
+        if (result != null) {
+            buildTree(result, map, idFunc, setSubFunc);
+            return result;
+        }
+        return Collections.emptyList();
     }
 
     private static <T, R> void buildTree(Collection<T> targets, Map<R, List<T>> map,

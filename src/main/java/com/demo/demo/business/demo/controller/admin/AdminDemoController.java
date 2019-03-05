@@ -66,10 +66,13 @@ public class AdminDemoController {
         return null;
     }
 
-    @GetMapping("{name}/string")
-    public Result testString(@PathVariable("nam1e") String name) {
-        return Result.success(name);
+    @GetMapping("test")
+    public Result testString() {
+        System.out.println("good");
+        return Result.success();
     }
+
+
 
 
 }

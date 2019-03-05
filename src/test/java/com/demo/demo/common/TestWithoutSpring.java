@@ -18,7 +18,7 @@ public class TestWithoutSpring {
     @Test
     public void test8() throws JsonProcessingException {
         List<Category> categories = new ArrayList<>();
-        categories.add(new Category(1, 0));
+        categories.add(new Category(1, null));
         categories.add(new Category(2, 1));
         categories.add(new Category(3, 1));
         categories.add(new Category(4, 1));
@@ -28,7 +28,7 @@ public class TestWithoutSpring {
         categories.add(new Category(8, 3));
         categories.add(new Category(9, 4));
         categories.add(new Category(10, 4));
-        categories.add(new Category(11, 0));
+        categories.add(new Category(11, null));
         categories.add(new Category(12, 11));
         categories.add(new Category(13, 11));
         categories.add(new Category(14, 12));
@@ -36,29 +36,10 @@ public class TestWithoutSpring {
 
         Collections.shuffle(categories);
 
-        Map<Integer, List<Category>> map = categories.stream().collect(Collectors.groupingBy(Category::getPid));
-        List<Category> tops = map.get(0);
-        buildTree(tops, map);
+        List<Category> tops2 = CollectionUtil.buildTree(null, categories, Category::getId, Category::getPid, Category::setSubs);
 
-        String str1 = new ObjectMapper().writeValueAsString(tops);
-        System.out.println(str1);
-
-        List<Category> tops2 = CollectionUtil.buildTree(0, categories, Category::getId, Category::getPid, Category::setSubs);
-
-        String str2 = new ObjectMapper().writeValueAsString(tops2);
-        System.out.println(str2);
-        System.out.println(str1.equals(str2));
-    }
-
-    private void buildTree(List<Category> list, Map<Integer, List<Category>> map) {
-        list.forEach(c -> {
-            //获取c的子分类
-            List<Category> subs = map.get(c.getId());
-            if (subs != null) {//存在子分类
-                c.setSubs(subs);
-                buildTree(subs, map);
-            }
-        });
+        String result = new ObjectMapper().writeValueAsString(tops2);
+        System.out.println(result);
     }
 
     class Category {
