@@ -54,7 +54,6 @@ class Mine {
     static int compute(List<Mine> mines, int workers) {
         Computer computer = new Computer(mines, workers);
         int prod = computer.getProd();
-        System.out.println(computer.count);
         return prod;
     }
 

@@ -2,10 +2,7 @@ package com.demo.demo.arithmetic.dynamicprogram;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 背包问题：
@@ -13,7 +10,7 @@ import java.util.Map;
  */
 public class BagProblem {
 
-    private Bag bag = new Bag(100);
+    private Bag bag = new Bag(60);
     private List<Product> products = Arrays.asList(
             new Product(20, 5),
             new Product(40, 10),
@@ -23,48 +20,55 @@ public class BagProblem {
             new Product(80, 42),
             new Product(60, 20)
     );
-    private boolean[] choice = new boolean[products.size()];
 
     @Test
     public void test() {
+        Collections.shuffle(products);
         int sumValue = products.stream().mapToInt(Product::getValue).sum();
-        System.out.println("总价值：" + sumValue);
+        System.out.println("物品总价值：" + sumValue);
         int sumVolume = products.stream().mapToInt(Product::getVolume).sum();
-        System.out.println("总体积：" + sumVolume);
+        System.out.println("物品总体积：" + sumVolume);
 
-        Result result = new Resolver(bag, products).getChoice();
-        System.out.println(result.getValue());
-        for (boolean b : result.getChoice()) {
-            System.out.println(b);
+        Choice choice = new Resolver(bag, products).getBestChoice();
+        System.out.println("总价值" + choice.value);
+        int totalValue = 0;
+        for (int i = 0; i < choice.choices.length; i++) {
+            if (choice.choices[i]) {
+                totalValue += products.get(i).getValue();
+            }
+            System.out.print(choice.choices[i] + ",");
         }
+        System.out.println("\n最终总价值：" + totalValue);
     }
 
 
 }
 
-class Result {
-    private int value;
-    private boolean[] choice;
+/**
+ * 最优解中，index位置的情况
+ */
+class Choice {
+    //当前组合的总价值
+    int value;
+    //当前递归链的选择情况
+    boolean[] choices;
 
-    Result(int value, boolean[] choice) {
+    Choice(int value, int size) {
         this.value = value;
-        this.choice = choice;
+        this.choices = new boolean[size];
     }
 
-    int getValue() {
-        return value;
+    void setChoice(int index, boolean choice) {
+        choices[index] = choice;
     }
 
-    boolean[] getChoice() {
-        return choice;
-    }
 }
 
 class Resolver {
     private Bag bag;
     private List<Product> products;
-    private boolean[] choice;
-    private Map<String, Integer> cache;
+    //存储某个index+某个capacity组合下的最优解
+    private Map<String, Choice> choiceCache;
 
     Resolver(Bag bag, List<Product> products) {
         this.init(bag, products);
@@ -73,58 +77,73 @@ class Resolver {
     private void init(Bag bag, List<Product> products) {
         this.bag = bag;
         this.products = products;
-        choice = new boolean[products.size()];
-        cache = new HashMap<>();
+        choiceCache = new HashMap<>();
     }
 
-    Result getChoice() {
-        int value = this.choice(products.size() - 1, bag.getCapacity());
-        return new Result(value, choice);
+    Choice getBestChoice() {
+        return this.getBestChoice(products.size() - 1, bag.getCapacity());
     }
 
-    private int choice(int index, int capacity) {
+    /**
+     * 获取用capacity容量去装0~index位置的物品的最优解
+     *
+     * @param index    位置
+     * @param capacity 当前容量
+     */
+    private Choice getBestChoice(int index, int capacity) {
         Product pro = products.get(index);
         int value = pro.getValue();
         int volume = pro.getVolume();
 
         String key = this.key(index, capacity);
-        Integer cacheResult = cache.get(key);
-        if (cacheResult != null) {
-            return cacheResult;
+        Choice cacheData = choiceCache.get(key);
+        if (cacheData != null) {
+//            return cacheData;
         }
 
         //处理边界情况
-        //给定的容量不够装这件物品
-        if (capacity < volume) {
-            choice[index] = false;
-            cache.put(key, 0);
-            return 0;
-        }
-        //如果index是第一件物品，且容量足够
         if (index == 0) {
-            choice[index] = true;
-            cache.put(key, value);
-            return value;
+            Choice choice;
+            //容量足够
+            if (capacity >= volume) {
+                choice = new Choice(value, products.size());
+                choice.setChoice(0, true);
+            }
+            //容量不够
+            else {
+                choice = new Choice(0, products.size());
+                choice.setChoice(0, false);
+            }
+            choiceCache.put(key, choice);
+            return choice;
+        }
+        //如果给定的容量太小
+        if (capacity < volume) {
+            Choice choice = this.getBestChoice(index - 1, capacity);
+            choice.setChoice(index, false);
+            choiceCache.put(key, choice);
+            return choice;
         }
 
-        //递归
+        //给定容量足够放置当前物品，因此需要递归，比较当前物品装与不装的优劣
         //当前物品装进去
-        int load = this.choice(index - 1, capacity - volume) + value;
+        Choice loadChoice = this.getBestChoice(index - 1, capacity - volume);
         //当前物品不装进去
-        int unload = this.choice(index - 1, capacity);
-        int max = max(load, unload, index);
-        cache.put(key, max);
-        return max;
+        Choice unloadChoice = this.getBestChoice(index - 1, capacity);
+        Choice choice;
+        if (loadChoice.value + value >= unloadChoice.value) {
+            choice = loadChoice;
+            choice.value += value;
+            choice.setChoice(index, true);
+        } else {
+            choice = unloadChoice;
+            choice.setChoice(index, false);
+        }
+
+        choiceCache.put(key, choice);
+        return choice;
     }
 
-    private int max(int load, int unload, int index) {
-        if (load >= unload) {
-            choice[index] = true;
-            return load;
-        }
-        choice[index] = false;
-        return unload;
-    }
 
     private String key(int index, int capacity) {
         return index + "_" + capacity;
@@ -138,7 +157,7 @@ class Bag {
         this.capacity = capacity;
     }
 
-    public int getCapacity() {
+    int getCapacity() {
         return capacity;
     }
 }
@@ -152,11 +171,11 @@ class Product {
         this.volume = volume;
     }
 
-    public int getValue() {
+    int getValue() {
         return value;
     }
 
-    public int getVolume() {
+    int getVolume() {
         return volume;
     }
 }

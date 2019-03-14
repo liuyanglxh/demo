@@ -8,17 +8,16 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class TestWithoutSpring {
+
 
     @Test
     public void test8() throws JsonProcessingException {
         List<Category> categories = new ArrayList<>();
-        categories.add(new Category(1, null));
+        categories.add(new Category(1, 0));
         categories.add(new Category(2, 1));
         categories.add(new Category(3, 1));
         categories.add(new Category(4, 1));
@@ -28,7 +27,7 @@ public class TestWithoutSpring {
         categories.add(new Category(8, 3));
         categories.add(new Category(9, 4));
         categories.add(new Category(10, 4));
-        categories.add(new Category(11, null));
+        categories.add(new Category(11, 0));
         categories.add(new Category(12, 11));
         categories.add(new Category(13, 11));
         categories.add(new Category(14, 12));
@@ -36,10 +35,28 @@ public class TestWithoutSpring {
 
         Collections.shuffle(categories);
 
-        List<Category> tops2 = CollectionUtil.buildTree(null, categories, Category::getId, Category::getPid, Category::setSubs);
+        List<Category> tops = CollectionUtil.buildTree(0, categories, Category::getId, Category::getPid, Category::setSubs);
 
-        String result = new ObjectMapper().writeValueAsString(tops2);
-        System.out.println(result);
+        String str2 = new ObjectMapper().writeValueAsString(tops);
+        System.out.println(str2);
+    }
+
+    @Test
+    public void test9() {
+        Pattern scenePattern = Pattern.compile("scene-[0-9]{4}");
+        Matcher matcher = scenePattern.matcher("bid>19986|bname>Yum Creamery|ic>|yh>1174576|pf>miniprogram|pgn>local-biz-detail|scene-10811");
+        if (matcher.find()) {
+            System.out.println(matcher.group(0));
+        }
+    }
+
+    @Test
+    public void test77() throws JsonProcessingException {
+        Pattern pattern = Pattern.compile("scene>[0-9]+");
+        Matcher matcher = pattern.matcher("bid>19986|bname>Yum Creamery|ic>|yh>1174576|pf>miniprogram|pgn>local-biz-detail|scene>1089");
+        if (matcher.find()) {
+            System.out.println(matcher.group(0));
+        }
     }
 
     class Category {
